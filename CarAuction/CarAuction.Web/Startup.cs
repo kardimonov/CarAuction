@@ -1,7 +1,9 @@
 using Autofac;
 using CarAuction.Data.Context;
+using CarAuction.Logic.Profiles;
 using CarAuction.Logic.Services.AuthInfrastructure;
 using CarAuction.Web;
+using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
@@ -41,10 +43,10 @@ namespace CarAuction
             var connection = Configuration.GetConnectionString("DefaultConnection");            
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
-            //services.AddAutoMapper(typeof(Startup), typeof(BackgroundProfile));
+            services.AddAutoMapper(typeof(AuctionProfile));
             services.AddOptions();
-            //services.AddMvc();
-
+            services.AddMvc()
+                .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
             services.AddControllers().AddNewtonsoftJson();            
 
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));

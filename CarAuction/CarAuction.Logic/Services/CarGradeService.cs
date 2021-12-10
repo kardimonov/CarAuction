@@ -16,12 +16,12 @@ namespace CarAuction.Logic.Services
             return grade;
         }
 
-        private static int CorrectByAge(DateTime year, int grade)
+        private static int CorrectByAge(int year, int grade)
         {
-            var span = DateTime.Today.Subtract(year);
-            var zeroTime = new DateTime(1, 1, 1);
-            var carAge = (zeroTime + span).Year - 1;
-            return grade - carAge;
+            var age = DateTime.Today.Year - year;
+            //var zeroTime = new DateTime(1, 1, 1);
+            //var carAge = (zeroTime + span).Year - 1;
+            return grade - age;
         }
 
         private static int CorrectByOdometer(int odometer, int grade)

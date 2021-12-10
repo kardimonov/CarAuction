@@ -14,8 +14,7 @@ namespace CarAuction.Data.Configurations
             builder.Property(c => c.Odometer)
                 .IsRequired();
             builder.Property(c => c.Year)
-                .IsRequired()
-                .HasColumnType("date");  // check
+                .IsRequired();  // check
             builder.Property(c => c.ExteriorColor)
                 .IsRequired()
                 .HasMaxLength(50);

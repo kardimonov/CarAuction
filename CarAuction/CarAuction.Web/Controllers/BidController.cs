@@ -15,7 +15,7 @@ namespace CarAuction.Web.Controllers
     /// Controller to manage bids
     /// </summary>
     /// <returns></returns>
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class BidController : ControllerBase
@@ -33,7 +33,7 @@ namespace CarAuction.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         // POST: api/Bid/Create/
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create(AddBidCommand model)
         {
