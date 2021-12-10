@@ -2,7 +2,7 @@
 
 namespace CarAuction.Logic.Interfaces
 {
-    public interface ICarGradeService
+    public interface ICarGradeService : IService
     {
         int CalculateGrade(Car car);
     }

@@ -6,13 +6,13 @@ namespace CarAuction.Data.Context
 {
     public class ApplicationContext : DbContext
     {
-        //public ApplicationContext(DbContextOptions<ApplicationContext> options)
-        //    : base(options)
-        //{ }
-        public ApplicationContext()
-        {
-            Database.EnsureCreated();
-        }
+        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+            : base(options)
+        { }
+        //public ApplicationContext()
+        //{
+        //    Database.EnsureCreated();
+        //}
 
         public DbSet<Auction> Auctions { get; set; }
         public DbSet<Car> Cars { get; set; }

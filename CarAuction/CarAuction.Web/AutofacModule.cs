@@ -11,9 +11,7 @@ namespace CarAuction.Web
     public class AutofacModule : Module
     {
         protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterMediatR(typeof(AddAuctionCommand).Assembly);
-
+        { 
             builder.RegisterAssemblyTypes(typeof(IRepository).Assembly)
             .Where(t => typeof(IRepository).IsAssignableFrom(t))
             .AsImplementedInterfaces()
@@ -25,6 +23,8 @@ namespace CarAuction.Web
             .InstancePerDependency();
 
             builder.RegisterType<AuthHandler>().As<IAuthHandler>();
+            
+            builder.RegisterMediatR(typeof(AddAuctionCommand).Assembly);
         }
     }
 }

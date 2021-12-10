@@ -11,7 +11,7 @@ namespace CarAuction.Web.Controllers
     /// Controller to manage auctions
     /// </summary>
     /// <returns></returns>
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]/[action]")]
     [ApiController]
     public class AuctionController : ControllerBase
@@ -69,7 +69,7 @@ namespace CarAuction.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         // POST: api/Auction/Create/
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<IActionResult> Create(AddAuctionCommand model)
         {
@@ -88,7 +88,7 @@ namespace CarAuction.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         // PUT: api/Auction/Update/
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpPut]
         public async Task<IActionResult> Update(UpdateAuctionCommand model)
         {
@@ -107,7 +107,7 @@ namespace CarAuction.Web.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         // DELETE: api/Auction/Delete/
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [HttpDelete]
         public async Task<IActionResult> Delete(DeleteAuctionCommand model)
         {

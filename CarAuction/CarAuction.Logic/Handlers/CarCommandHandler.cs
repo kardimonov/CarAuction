@@ -2,7 +2,7 @@
 using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using CarAuction.Logic.Commands.Car;
-using CarAuction.Logic.Queries;
+using CarAuction.Logic.Interfaces;
 using MediatR;
 using System;
 using System.Threading;
@@ -10,30 +10,27 @@ using System.Threading.Tasks;
 
 namespace CarAuction.Logic.Handlers
 {
-    internal class CarHandler : 
-        IRequestHandler<GetCarByIdQuery, Car>,
+    internal class CarCommandHandler : 
         IRequestHandler<AddCarCommand, Unit>,
         IRequestHandler<UpdateCarCommand, Unit>,
         IRequestHandler<DeleteCarCommand, Unit>,
         IRequestHandler<AssignToAuctionCommand, Unit>
     {
         private readonly ICarRepository _repo;
+        private readonly ICarGradeService _service;
         private readonly IMapper _mapper;
 
-        public CarHandler(ICarRepository repository, IMapper map)
+        public CarCommandHandler(ICarRepository repository, ICarGradeService service, IMapper map)
         {
             _repo = repository ?? throw new ArgumentNullException(nameof(repository));
+            _service = service;
             _mapper = map;
-        }
-
-        public async Task<Car> Handle(GetCarByIdQuery request, CancellationToken cancellationToken = default)
-        {
-            return await _repo.GetById(request.Id);
         }
 
         public async Task<Unit> Handle(AddCarCommand request, CancellationToken cancellationToken = default)
         {
             var car = _mapper.Map<Car>(request);
+            car.Grade = _service.CalculateGrade(car);
             await _repo.Create(car);
             return Unit.Value;
         }
@@ -41,7 +38,8 @@ namespace CarAuction.Logic.Handlers
         public async Task<Unit> Handle(UpdateCarCommand request, CancellationToken cancellationToken = default)
         {
             var car = _mapper.Map<Car>(request);
-            await _repo.Create(car);
+            car.Grade = _service.CalculateGrade(car);
+            await _repo.Update(car);
             return Unit.Value;
         }
 

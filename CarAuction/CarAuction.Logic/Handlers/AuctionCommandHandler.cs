@@ -30,7 +30,7 @@ namespace CarAuction.Logic.Handlers
         {
             var auction = _mapper.Map<Auction>(request);
             var id = await _repo.Create(auction);
-            _ = Task.Run(async () => await _auctionManagerService.ManageAuction(auction.StartTime, id));
+            //_ = Task.Run(async () => await _auctionManagerService.ManageAuction(auction.StartTime, id));
             return Unit.Value;
         }
 
