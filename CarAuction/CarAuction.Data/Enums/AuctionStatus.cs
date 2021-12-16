@@ -1,4 +1,4 @@
-﻿namespace CarAuction.Data
+﻿namespace CarAuction.Data.Enums
 {
     public enum AuctionStatus
     {

@@ -22,6 +22,11 @@ namespace CarAuction.Web
             .AsImplementedInterfaces()
             .InstancePerDependency();
 
+            builder.RegisterAssemblyTypes(typeof(ICarGradeModel).Assembly)
+            .Where(t => typeof(ICarGradeModel).IsAssignableFrom(t))
+            .AsImplementedInterfaces()
+            .InstancePerDependency();
+
             builder.RegisterType<AuthHandler>().As<IAuthHandler>();
             
             builder.RegisterMediatR(typeof(AddAuctionCommand).Assembly);

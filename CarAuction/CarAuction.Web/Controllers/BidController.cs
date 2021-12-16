@@ -42,7 +42,7 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Request is not correct");
             }
 
-            var auction = await _mediator.Send(new GetAuctionByIdQuery() { Id = model.AuctionId });
+            var auction = await _mediator.Send(new GetByAuctionCarIdQuery() { AuctionCarId = model.AuctionCarId });
             if (DateTime.Now < auction.StartTime || DateTime.Now >= auction.EndTime)
             {
                 return BadRequest("The bids are accepted only while the auction is open");

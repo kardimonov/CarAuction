@@ -1,5 +1,5 @@
 ﻿using CarAuction.Logic.Commands.Car;
-using CarAuction.Logic.Queries;
+using CarAuction.Logic.Queries.Cars;
 using CarAuction.Logic.Queries.Auctions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -37,13 +37,29 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Id is not specified");
             }
 
-            var result = await _mediator.Send(new GetCarByIdQuery() { Id = (int)id });            
+            var result = await _mediator.Send(new GetCarByIdQuery { Id = (int)id });            
             if (result == null)
             {
-                return NotFound($"Car with id:{id} is not found");
+                return NotFound($"Car with id: {id} is not found");
             }
-
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Calculate recommended price for a vehicle
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        // POST: api/Car/GetRecommendedPrice/
+        [HttpPost]
+        public async Task<IActionResult> GetRecommendedPrice(GetRecommendedPriceQuery model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Request is not correct");
+            }
+            var price = await _mediator.Send(model);
+            return Ok(new { RecommendedPrice = price });
         }
 
         /// <summary>
@@ -59,7 +75,6 @@ namespace CarAuction.Web.Controllers
             {
                 return BadRequest("Request is not correct");
             }
-
             await _mediator.Send(model);            
             return Ok(new { Result = true });
         }
@@ -114,14 +129,24 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Request is not correct");
             }
 
-            var auction = await _mediator.Send(new GetAuctionByIdQuery() { Id = model.AuctionId });
-            if (DateTime.Now >= auction.StartTime)
+            var auction = await _mediator.Send(new GetAuctionByIdQuery { Id = model.AuctionId });
+            if (auction == null)
             {
-                return BadRequest("The auction has already started");
+                return NotFound($"Auction with id: {model.AuctionId} is not found");
             }
 
-            await _mediator.Send(model);
-            return Ok(new { Result = true });
+            if (DateTime.UtcNow >= auction.StartTime)
+            {
+                return BadRequest("The car cannot be assigned to started auction");
+            }
+
+            var response = await _mediator.Send(model);
+            if (!response.Result)
+            {
+                return BadRequest($"{response.Message}");
+            }
+
+            return Ok(new { Result = response.Result, Message = response.Message });
         }
     }
 }

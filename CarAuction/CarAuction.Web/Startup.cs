@@ -1,6 +1,7 @@
 using Autofac;
 using CarAuction.Data.Context;
 using CarAuction.Logic.Profiles;
+using CarAuction.Logic.Services.AuctionInfrastructure;
 using CarAuction.Logic.Services.AuthInfrastructure;
 using CarAuction.Web;
 using FluentValidation.AspNetCore;
@@ -15,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Quartz;
 using System.Linq;
 using System.Text;
 
@@ -40,6 +43,12 @@ namespace CarAuction
                         .AllowAnyOrigin();
             }));
 
+            services.AddQuartz(q =>
+            {
+                q.UseMicrosoftDependencyInjectionJobFactory();
+            });
+            services.AddQuartzServer(q => q.WaitForJobsToComplete = true);
+
             var connection = Configuration.GetConnectionString("DefaultConnection");            
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));
 
@@ -47,7 +56,10 @@ namespace CarAuction
             services.AddOptions();
             services.AddMvc()
                 .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<Startup>());
-            services.AddControllers().AddNewtonsoftJson();            
+            services.AddControllers().AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
 
             services.Configure<AuthServiceModel>(Configuration.GetSection("AuthService"));
             var result = Configuration.GetSection("AuthService").GetChildren();

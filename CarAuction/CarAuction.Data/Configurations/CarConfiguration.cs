@@ -8,13 +8,19 @@ namespace CarAuction.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Car> builder)
         {
+            builder.Property(c => c.Manufacture)
+                .IsRequired()
+                .HasMaxLength(50);
+            builder.Property(c => c.Model)
+                .IsRequired()
+                .HasMaxLength(50);
             builder.Property(c => c.VIN)
                 .IsRequired()
                 .HasMaxLength(17);
             builder.Property(c => c.Odometer)
                 .IsRequired();
             builder.Property(c => c.Year)
-                .IsRequired();  // check
+                .IsRequired();
             builder.Property(c => c.ExteriorColor)
                 .IsRequired()
                 .HasMaxLength(50);
@@ -28,6 +34,8 @@ namespace CarAuction.Data.Configurations
             builder.Property(c => c.SuspensionProblems)
                 .IsRequired();
             builder.Property(c => c.ElectricsFailures)
+                .IsRequired();
+            builder.Property(c => c.MSRPrice)
                 .IsRequired();
         }
     }

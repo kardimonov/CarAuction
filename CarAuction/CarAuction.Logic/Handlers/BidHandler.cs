@@ -26,13 +26,6 @@ namespace CarAuction.Logic.Handlers
 
         public async Task<bool> Handle(AddBidCommand request, CancellationToken cancellationToken = default)
         {
-            var auction = await _auctionRepo.GetById(request.AuctionId);
-            var auctionCar = auction.Assignments.FirstOrDefault(i => i.AuctionId == request.AuctionId);
-            if (auctionCar.CarId != request.CarId)
-            {
-                return false;
-            }
-
             var bid = _mapper.Map<Bid>(request);
             await _repo.Create(bid);
             return true;

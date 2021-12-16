@@ -37,7 +37,7 @@ namespace CarAuction.Logic.Handlers
         public async Task<Unit> Handle(UpdateAuctionCommand request, CancellationToken cancellationToken = default)
         {
             var auction = _mapper.Map<Auction>(request);
-            await _repo.Create(auction);
+            await _repo.Update(auction);
             return Unit.Value;
         }
 

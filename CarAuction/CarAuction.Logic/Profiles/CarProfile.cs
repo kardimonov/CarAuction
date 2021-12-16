@@ -8,8 +8,10 @@ namespace CarAuction.Logic.Profiles
     {
         public CarProfile()
         {
-            CreateMap<AddCarCommand, Car>();
-            CreateMap<UpdateCarCommand, Car>();
+            CreateMap<AddCarCommand, Car>()
+                .ForMember(c => c.Grade, opt => opt.MapFrom((src, dest, _, context) => context.Options.Items["Grade"]));
+            CreateMap<UpdateCarCommand, Car>()
+                .ForMember(c => c.Grade, opt => opt.MapFrom((src, dest, _, context) => context.Options.Items["Grade"]));
         }
     }
 }

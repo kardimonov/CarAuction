@@ -1,12 +1,11 @@
-﻿using CarAuction.Data.Models;
-using CarAuction.Logic.Interfaces;
+﻿using CarAuction.Logic.Interfaces;
 using System;
 
 namespace CarAuction.Logic.Services
 {
-    internal class CarGradeService : ICarGradeService
+    internal class CarGradeService : ICarGradeService //where T : ICarGradeModel
     {
-        public int CalculateGrade(Car car)
+        public int CalculateGrade(ICarGradeModel car)
         {
             var grade = 50;
             grade = CorrectByAge(car.Year, grade);
@@ -18,9 +17,7 @@ namespace CarAuction.Logic.Services
 
         private static int CorrectByAge(int year, int grade)
         {
-            var age = DateTime.Today.Year - year;
-            //var zeroTime = new DateTime(1, 1, 1);
-            //var carAge = (zeroTime + span).Year - 1;
+            var age = DateTime.UtcNow.Year - year;
             return grade - age;
         }
 

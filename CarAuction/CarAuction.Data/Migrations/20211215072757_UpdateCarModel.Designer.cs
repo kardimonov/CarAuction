@@ -4,14 +4,16 @@ using CarAuction.Data.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CarAuction.Data.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20211215072757_UpdateCarModel")]
+    partial class UpdateCarModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -47,27 +49,17 @@ namespace CarAuction.Data.Migrations
 
             modelBuilder.Entity("CarAuction.Data.Models.AuctionCar", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("AuctionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AuctionPrice")
                         .HasColumnType("int");
 
                     b.Property<int>("CarId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("AuctionId");
+                    b.HasKey("AuctionId", "CarId");
 
                     b.HasIndex("CarId");
 
-                    b.ToTable("AuctionCars");
+                    b.ToTable("AuctionCar");
                 });
 
             modelBuilder.Entity("CarAuction.Data.Models.Bid", b =>
@@ -80,14 +72,11 @@ namespace CarAuction.Data.Migrations
                     b.Property<int>("Amount")
                         .HasColumnType("int");
 
-                    b.Property<int>("AuctionCarId")
+                    b.Property<int>("AuctionId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("CarId")
+                    b.Property<int>("CarId")
                         .HasColumnType("int");
-
-                    b.Property<DateTime>("Time")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -97,7 +86,7 @@ namespace CarAuction.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AuctionCarId");
+                    b.HasIndex("AuctionId");
 
                     b.HasIndex("CarId");
 
@@ -112,6 +101,9 @@ namespace CarAuction.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("AuctionPrice")
+                        .HasColumnType("int");
 
                     b.Property<bool>("ElectricsFailures")
                         .HasColumnType("bit");
@@ -131,16 +123,6 @@ namespace CarAuction.Data.Migrations
 
                     b.Property<int>("MSRPrice")
                         .HasColumnType("int");
-
-                    b.Property<string>("Manufacture")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<string>("Model")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("Odometer")
                         .HasColumnType("int");
@@ -191,6 +173,15 @@ namespace CarAuction.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Password = "adm123",
+                            Role = "admin",
+                            UserName = "admin"
+                        });
                 });
 
             modelBuilder.Entity("CarAuction.Data.Models.AuctionCar", b =>
@@ -214,15 +205,17 @@ namespace CarAuction.Data.Migrations
 
             modelBuilder.Entity("CarAuction.Data.Models.Bid", b =>
                 {
-                    b.HasOne("CarAuction.Data.Models.AuctionCar", "AuctionCar")
+                    b.HasOne("CarAuction.Data.Models.Auction", "Auction")
                         .WithMany("Bids")
-                        .HasForeignKey("AuctionCarId")
+                        .HasForeignKey("AuctionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("CarAuction.Data.Models.Car", null)
+                    b.HasOne("CarAuction.Data.Models.Car", "Car")
                         .WithMany("Bids")
-                        .HasForeignKey("CarId");
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("CarAuction.Data.Models.User", "User")
                         .WithMany("Bids")
@@ -230,7 +223,9 @@ namespace CarAuction.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AuctionCar");
+                    b.Navigation("Auction");
+
+                    b.Navigation("Car");
 
                     b.Navigation("User");
                 });
@@ -238,10 +233,7 @@ namespace CarAuction.Data.Migrations
             modelBuilder.Entity("CarAuction.Data.Models.Auction", b =>
                 {
                     b.Navigation("Assignments");
-                });
 
-            modelBuilder.Entity("CarAuction.Data.Models.AuctionCar", b =>
-                {
                     b.Navigation("Bids");
                 });
 

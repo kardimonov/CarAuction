@@ -1,10 +1,13 @@
-﻿using MediatR;
+﻿using CarAuction.Logic.Interfaces;
+using MediatR;
 
 namespace CarAuction.Logic.Commands.Car
 {
-    public class UpdateCarCommand : IRequest<Unit>
+    public class UpdateCarCommand : IRequest<Unit>, ICarGradeModel
     {
         public int Id { get; set; }
+        public string Manufacture { get; set; }
+        public string Model { get; set; }
         public string VIN { get; set; }
         public int Odometer { get; set; }
         public int Year { get; set; }
@@ -14,5 +17,6 @@ namespace CarAuction.Logic.Commands.Car
         public bool SmallScratches { get; set; }
         public bool SuspensionProblems { get; set; }
         public bool ElectricsFailures { get; set; }
+        public int MSRPrice { get; set; }        
     }
 }

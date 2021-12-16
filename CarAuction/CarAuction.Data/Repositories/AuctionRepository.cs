@@ -3,6 +3,7 @@ using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarAuction.Data.Repositories
@@ -23,7 +24,16 @@ namespace CarAuction.Data.Repositories
 
         public async Task<List<Auction>> GetAll()
         {
-            return await _db.Auctions.ToListAsync();
+            return await _db.Auctions.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Auction> GetByIdWithCarsAndBids(int id)
+        {
+            return await _db.Auctions
+                .Include(a => a.Assignments)
+                .ThenInclude(ac => ac.Car)
+                .ThenInclude(c => c.Bids)
+                .FirstOrDefaultAsync(a => a.Id == id);
         }
 
         public async Task<int> Create(Auction auction)
@@ -43,6 +53,13 @@ namespace CarAuction.Data.Repositories
         {
             _db.Auctions.Remove(await _db.Auctions.FindAsync(id));
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<Auction> GetByAuctionCarId(int auctionCarId)
+        {
+            return await _db.Auctions
+                .Where(a => a.Assignments.Any(ac => ac.Id == auctionCarId))
+                .FirstOrDefaultAsync();
         }
     }
 }

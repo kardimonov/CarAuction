@@ -17,6 +17,8 @@ namespace CarAuction.Data.Configurations
             builder.Property(e => e.EndTime)
                 .IsRequired()
                 .HasColumnType("datetime2(0)");
+            builder.Property(e => e.Status)
+                .IsRequired();
         }
     }
 }

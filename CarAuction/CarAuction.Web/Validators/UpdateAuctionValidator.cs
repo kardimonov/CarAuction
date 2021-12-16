@@ -4,10 +4,14 @@ using System;
 
 namespace CarAuction.Web.Validators
 {
-    public class AddAuctionValidator : AbstractValidator<AddAuctionCommand>
+    public class UpdateAuctionValidator : AbstractValidator<UpdateAuctionCommand>
     {
-        public AddAuctionValidator()
+        public UpdateAuctionValidator()
         {
+            RuleFor(i => i.Id)
+                .NotEmpty()
+                .WithMessage($"Auction id cannot be empty");
+
             RuleFor(i => i.Name)
                 .NotEmpty()
                 .WithMessage($"Enter Auction name");
@@ -25,7 +29,7 @@ namespace CarAuction.Web.Validators
                 .WithMessage($"Auction start must be earlier than its end");
         }
 
-        private bool ValidateEndTime(AddAuctionCommand source) =>
+        private bool ValidateEndTime(UpdateAuctionCommand source) =>
             source.StartTime < source.EndTime;
     }
 }
