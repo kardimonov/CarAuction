@@ -15,18 +15,14 @@ namespace CarAuction.Data.Repositories
             _db = context;
         }
 
-        public async Task<User> CheckPassword(string userName, string password)
+        public async Task<User> GetByName(string userName)
         {
-            return await _db.Users.FirstOrDefaultAsync(u => u.UserName == userName && u.Password == password);
+            return await _db.Users.FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
-        public async Task AddCustomer(string userName, string password)
+        public async Task AddCustomer(User user)
         {
-            _db.Users.Add(new User()
-            {
-                UserName = userName,
-                Password = password
-            });
+            _db.Users.Add(user);
             await _db.SaveChangesAsync();
         }
     }
