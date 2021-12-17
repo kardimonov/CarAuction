@@ -15,6 +15,7 @@ namespace CarAuction.Logic.Services
             {
                 rngCsp.GetNonZeroBytes(salt);
             }
+            var saltString = Convert.ToBase64String(salt);
 
             // derive a 256-bit subkey (use HMACSHA256 with 100,000 iterations)
             var hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
