@@ -8,8 +8,6 @@ namespace CarAuction.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<AuctionCar> builder)
         {
-            builder.HasKey(ac => new { ac.AuctionId, ac.CarId });
-
             builder.HasOne(ac => ac.Auction)
                 .WithMany(a => a.Assignments)
                 .HasForeignKey(ac => ac.AuctionId);

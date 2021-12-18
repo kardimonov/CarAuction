@@ -8,8 +8,10 @@ namespace CarAuction.Data.Interfaces
     {
         Task<Auction> GetById(int id);
         Task<List<Auction>> GetAll();
+        Task<Auction> GetByIdWithCarsAndBids(int id);
         Task<int> Create(Auction auction);
         Task Update(Auction auction);
         Task Delete(int id);
+        Task<Auction> GetByAuctionCarId(int auctionCarId);
     }
 }

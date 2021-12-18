@@ -3,6 +3,7 @@ using CarAuction.Logic.Queries.Auctions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace CarAuction.Web.Controllers
@@ -24,7 +25,7 @@ namespace CarAuction.Web.Controllers
         }
 
         /// <summary>
-        /// Get auction details by id
+        /// Get main info about an auction by id
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -37,7 +38,7 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Id is not specified");
             }
 
-            var result = await _mediator.Send(new GetAuctionByIdQuery() { Id = (int)id });
+            var result = await _mediator.Send(new GetAuctionByIdQuery { Id = (int)id });
             if (result == null)
             {
                 return NotFound($"Auction with id:{id} is not found");
@@ -47,7 +48,7 @@ namespace CarAuction.Web.Controllers
         }
 
         /// <summary>
-        /// Get all auction details
+        /// Get list of auctions with main info
         /// </summary>        
         /// <returns></returns>
         // GET: api/Auction/GetAll
@@ -61,6 +62,28 @@ namespace CarAuction.Web.Controllers
             }
 
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Get an auction details with assigned cars and their bids
+        /// </summary>        
+        /// <returns></returns>
+        // GET: api/Auction/GetDetailsById
+        [HttpGet]
+        public async Task<IActionResult> GetDetailsById(int? id)
+        {
+            if (id == null)
+            {
+                return BadRequest("Id is not specified");
+            }
+
+            var auction = await _mediator.Send(new GetDetailsByIdQuery { Id = (int)id });
+            if (auction == null)
+            {
+                return NotFound($"The Auction is not found");
+            }
+
+            return Ok(auction);
         }
 
         /// <summary>

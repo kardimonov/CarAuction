@@ -121,8 +121,8 @@ namespace CarAuction.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Password", "Role", "UserName" },
-                values: new object[] { 1, "adm123", "admin", "admin" });
+                columns: new[] { "Id", "Password", "Role", "Salt", "UserName" },  // adm123
+                values: new object[] { 1, "iLF9j4tyofpgQM+PZSVy5lJeF/cL1lS9EhLlbs+1GF4=", "admin", "J6TXAtSPg2h+FEbDZuOalA==", "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuctionCar_CarId",

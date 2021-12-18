@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using CarAuction.Data;
+using CarAuction.Data.Enums;
 using CarAuction.Data.Models;
 using CarAuction.Logic.Commands.Auction;
 

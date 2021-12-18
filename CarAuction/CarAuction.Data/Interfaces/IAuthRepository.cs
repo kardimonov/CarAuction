@@ -5,7 +5,7 @@ namespace CarAuction.Data.Interfaces
 {
     public interface IAuthRepository : IRepository
     {
-        Task<User> CheckPassword(string userName, string password);
-        Task AddCustomer(string userName, string password);
+        Task<User> GetByName(string userName);
+        Task AddCustomer(User user);
     }
 }

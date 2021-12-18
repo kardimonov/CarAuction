@@ -13,16 +13,16 @@ namespace CarAuction.Web.Validators
                 .WithMessage($"Enter Auction name");
 
             RuleFor(i => i.StartTime)
-               .GreaterThanOrEqualTo(DateTime.Today)
+               .GreaterThanOrEqualTo(DateTime.UtcNow)
                .WithMessage($"Enter correct date and time of the Auction start");
 
             RuleFor(i => i.EndTime)
-                .GreaterThan(DateTime.Today)
+                .GreaterThan(DateTime.UtcNow)
                 .WithMessage($"Enter correct date and time of the Auction end");
 
             RuleFor(i => i)
                 .Must(ValidateEndTime)
-                .WithMessage($"Auction beginning cannot be after the auction end");
+                .WithMessage($"Auction start must be earlier than its end");
         }
 
         private bool ValidateEndTime(AddAuctionCommand source) =>

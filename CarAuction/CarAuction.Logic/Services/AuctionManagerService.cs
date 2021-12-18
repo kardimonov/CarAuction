@@ -1,4 +1,4 @@
-﻿using CarAuction.Data;
+﻿using CarAuction.Data.Enums;
 using CarAuction.Data.Interfaces;
 using CarAuction.Logic.Interfaces;
 using System;
@@ -17,7 +17,7 @@ namespace CarAuction.Logic.Services
 
         public async Task ManageAuction(DateTime auctionStart, int id)
         {
-            var timeSpan = auctionStart.Subtract(DateTime.Now);
+            var timeSpan = auctionStart.Subtract(DateTime.UtcNow);
             await Task.Delay(timeSpan);
 
             var auction = await _repo.GetById(id);

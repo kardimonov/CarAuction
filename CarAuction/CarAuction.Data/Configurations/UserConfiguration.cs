@@ -16,7 +16,6 @@ namespace CarAuction.Data.Configurations
                 .HasMaxLength(50);
             builder.Property(u => u.Role)
                 .IsRequired();
-            builder.HasData(new User { Id = 1, UserName = "admin", Role = "admin", Password = "adm123" });
         }
     }
 }
