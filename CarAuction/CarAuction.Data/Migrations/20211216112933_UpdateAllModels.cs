@@ -27,10 +27,10 @@ namespace CarAuction.Data.Migrations
                 name: "PK_AuctionCar",
                 table: "AuctionCar");
 
-            migrationBuilder.DeleteData(
-                table: "Users",
-                keyColumn: "Id",
-                keyValue: 1);
+            //migrationBuilder.DeleteData(
+            //    table: "Users",
+            //    keyColumn: "Id",
+            //    keyValue: 1);
 
             migrationBuilder.DropColumn(
                 name: "AuctionPrice",
@@ -233,8 +233,9 @@ namespace CarAuction.Data.Migrations
 
             migrationBuilder.InsertData(
                 table: "Users",
-                columns: new[] { "Id", "Password", "Role", "UserName" },
-                values: new object[] { 1, "adm123", "admin", "admin" });
+                columns: new[] { "Id", "Password", "Role", "Salt", "UserName" },  
+                values: new object[] { 1, "iLF9j4tyofpgQM+PZSVy5lJeF/cL1lS9EhLlbs+1GF4=", "admin", Convert.FromBase64String("J6TXAtSPg2h+FEbDZuOalA=="), "admin" });
+
 
             migrationBuilder.AddForeignKey(
                 name: "FK_AuctionCar_Auctions_AuctionId",
