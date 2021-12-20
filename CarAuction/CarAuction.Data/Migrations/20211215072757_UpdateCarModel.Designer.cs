@@ -165,6 +165,10 @@ namespace CarAuction.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<byte[]>("Salt")
+                        .IsRequired()
+                        .HasColumnType("varbinary(max)");
+
                     b.Property<string>("UserName")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -178,8 +182,9 @@ namespace CarAuction.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Password = "adm123",
+                            Password = "iLF9j4tyofpgQM+PZSVy5lJeF/cL1lS9EhLlbs+1GF4=",
                             Role = "admin",
+                            Salt = Convert.FromBase64String("J6TXAtSPg2h+FEbDZuOalA=="),
                             UserName = "admin"
                         });
                 });

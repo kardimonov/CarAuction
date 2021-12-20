@@ -16,6 +16,9 @@ namespace CarAuction.Data.Configurations
                 .HasMaxLength(50);
             builder.Property(u => u.Role)
                 .IsRequired();
+            builder.Property(e => e.Salt)
+                .IsRequired()
+                .HasColumnType("varbinary(max)");
         }
     }
 }

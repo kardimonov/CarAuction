@@ -53,7 +53,8 @@ namespace CarAuction.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     UserName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     Password = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Role = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Salt = table.Column<byte[]>(type: "varbinary(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,7 +123,7 @@ namespace CarAuction.Data.Migrations
             migrationBuilder.InsertData(
                 table: "Users",
                 columns: new[] { "Id", "Password", "Role", "Salt", "UserName" },  // adm123
-                values: new object[] { 1, "iLF9j4tyofpgQM+PZSVy5lJeF/cL1lS9EhLlbs+1GF4=", "admin", "J6TXAtSPg2h+FEbDZuOalA==", "admin" });
+                values: new object[] { 1, "iLF9j4tyofpgQM+PZSVy5lJeF/cL1lS9EhLlbs+1GF4=", "admin", Convert.FromBase64String("J6TXAtSPg2h+FEbDZuOalA=="), "admin" });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AuctionCar_CarId",
