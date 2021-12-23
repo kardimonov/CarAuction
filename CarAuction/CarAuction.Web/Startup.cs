@@ -1,7 +1,6 @@
 using Autofac;
 using CarAuction.Data.Context;
 using CarAuction.Logic.Profiles;
-using CarAuction.Logic.Services.AuctionInfrastructure;
 using CarAuction.Logic.Services.AuthInfrastructure;
 using CarAuction.Web;
 using FluentValidation.AspNetCore;
@@ -18,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Quartz;
+using Quartz.Impl;
 using System.Linq;
 using System.Text;
 
@@ -47,7 +47,13 @@ namespace CarAuction
             {
                 q.UseMicrosoftDependencyInjectionJobFactory();
             });
-            services.AddQuartzServer(q => q.WaitForJobsToComplete = true);
+            services.AddQuartzHostedService(q =>
+            {
+                q.WaitForJobsToComplete = true;
+            });
+
+            var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
+            services.AddSingleton(scheduler);
 
             var connection = Configuration.GetConnectionString("DefaultConnection");            
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

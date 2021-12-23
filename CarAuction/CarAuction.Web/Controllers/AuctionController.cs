@@ -1,9 +1,9 @@
-﻿using CarAuction.Logic.Commands.Auction;
+﻿using CarAuction.Data.Enums;
+using CarAuction.Logic.Commands.Auction;
 using CarAuction.Logic.Queries.Auctions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace CarAuction.Web.Controllers
@@ -120,8 +120,18 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Request is not correct");
             }
 
-            await _mediator.Send(model);
-            return Ok(new { Result = true });
+            var response = await _mediator.Send(model);
+
+            if (response == null)
+            {
+                return NotFound($"Auction with id: {model.Id} is not found");
+            }
+            if (!response.Result)
+            {
+                return BadRequest(response.Message);
+            }
+
+            return Ok(new { response.Result, response.Message });
         }
 
         /// <summary>
@@ -137,6 +147,16 @@ namespace CarAuction.Web.Controllers
             if (!ModelState.IsValid)
             {
                 return BadRequest("Request is not correct");
+            }
+
+            var auction = await _mediator.Send(new GetAuctionByIdQuery { Id = model.Id });
+            if (auction == null)
+            {
+                return NotFound($"Auction with id: {model.Id} is not found");
+            }
+            if (auction.Status != AuctionStatus.Planned)
+            {
+                return BadRequest("You cannot remove the auction, which has started or completed");
             }
 
             await _mediator.Send(model);

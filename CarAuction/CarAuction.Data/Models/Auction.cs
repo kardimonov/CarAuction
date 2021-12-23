@@ -8,10 +8,9 @@ namespace CarAuction.Data.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
+        public DateTime StartTime { get; set; }  // Utc time
+        public DateTime EndTime { get; set; }    // Utc time
         public AuctionStatus Status { get; set; } 
-        //public List<Car> Cars { get; set; }
         public List<AuctionCar> Assignments { get; set; }
     }
 }

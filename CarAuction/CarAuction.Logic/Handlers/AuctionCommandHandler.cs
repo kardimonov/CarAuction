@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using CarAuction.Data.Enums;
 using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using CarAuction.Logic.Commands.Auction;
 using CarAuction.Logic.Interfaces;
+using CarAuction.Logic.Models;
 using MediatR;
 using System;
 using System.Threading;
@@ -12,17 +14,17 @@ namespace CarAuction.Logic.Handlers
 {
     internal class AuctionCommandHandler :
         IRequestHandler<AddAuctionCommand, Unit>,
-        IRequestHandler<UpdateAuctionCommand, Unit>,
+        IRequestHandler<UpdateAuctionCommand, ResponseModel>,
         IRequestHandler<DeleteAuctionCommand, Unit>
     {
         private readonly IAuctionRepository _repo;
-        private readonly IAuctionManagerService _auctionManagerService;
+        private readonly IAuctionManagerService _auctionService;
         private readonly IMapper _mapper;
 
         public AuctionCommandHandler(IAuctionRepository repository, IAuctionManagerService service, IMapper map)
         {
             _repo = repository ?? throw new ArgumentNullException(nameof(repository));
-            _auctionManagerService = service;
+            _auctionService = service;
             _mapper = map;
         }        
 
@@ -30,23 +32,54 @@ namespace CarAuction.Logic.Handlers
         {
             var auction = _mapper.Map<Auction>(request);
             var id = await _repo.Create(auction);
-            //_ = Task.Run(async () => await _auctionManagerService.ManageAuction(auction.StartTime, id));
+
+            await _auctionService.StartAuction(auction.StartTime, id);
+            await _auctionService.EndAuction(auction.EndTime, id);
+
             return Unit.Value;
         }
 
-        public async Task<Unit> Handle(UpdateAuctionCommand request, CancellationToken cancellationToken = default)
+        public async Task<ResponseModel> Handle(UpdateAuctionCommand request, CancellationToken cancellationToken = default)
         {
+            var auctionToUpdate = await _repo.GetById(request.Id);
+            if (auctionToUpdate == null)
+            {
+                return null;
+            }
+            if (auctionToUpdate.Status != AuctionStatus.Planned)
+            {
+                return new ResponseModel 
+                { 
+                    Result = false, 
+                    Message = $"You cannot update the auction, which has started or completed" 
+                };
+            }
+
             var auction = _mapper.Map<Auction>(request);
+
             await _repo.Update(auction);
-            return Unit.Value;
+
+            if (request.StartTime != auctionToUpdate.StartTime)
+            {
+                await _auctionService.RescheduleAuctionStart(auction.StartTime, auction.Id);
+            }
+            if (request.EndTime != auctionToUpdate.EndTime)
+            {
+                await _auctionService.RescheduleAuctionEnd(auction.EndTime, auction.Id);
+            }
+            
+            return new ResponseModel 
+            { 
+                Result = true, 
+                Message = $"Auction with id: {auction.Id} has been updated successfully" 
+            };
         }
 
         public async Task<Unit> Handle(DeleteAuctionCommand request, CancellationToken cancellationToken = default)
         {
             await _repo.Delete(request.Id);
+            await _auctionService.RemoveAuctionJobs(request.Id);
             return Unit.Value;
         }
-
-
     }
 }

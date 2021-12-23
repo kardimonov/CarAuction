@@ -6,5 +6,6 @@ namespace CarAuction.Data.Interfaces
     public interface IBidRepository : IRepository
     {
         Task Create(Bid bid);
+        Task Update(Bid bid);
     }
 }
