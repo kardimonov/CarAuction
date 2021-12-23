@@ -3,7 +3,7 @@ using System;
 
 namespace CarAuction.Logic.Services
 {
-    internal class CarGradeService : ICarGradeService //where T : ICarGradeModel
+    internal class CarGradeService : ICarGradeService 
     {
         public int CalculateGrade(ICarGradeModel car)
         {

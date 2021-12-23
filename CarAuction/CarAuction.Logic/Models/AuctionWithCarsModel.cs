@@ -1,14 +1,14 @@
 ﻿using CarAuction.Data.Enums;
-using System;
+using CarAuction.Data.Models;
+using System.Collections.Generic;
 
 namespace CarAuction.Logic.Models
 {
-    public class AuctionModel
+    public class AuctionWithCarsModel
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public DateTime StartTime { get; set; }  
-        public DateTime EndTime { get; set; }    
         public AuctionStatus Status { get; set; }
+        public List<Car> Cars { get; set; }
     }
 }

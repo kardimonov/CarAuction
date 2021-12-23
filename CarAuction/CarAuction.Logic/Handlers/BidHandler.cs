@@ -4,7 +4,6 @@ using CarAuction.Data.Models;
 using CarAuction.Logic.Commands;
 using MediatR;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,13 +13,11 @@ namespace CarAuction.Logic.Handlers
         IRequestHandler<AddBidCommand, bool>
     {
         private readonly IBidRepository _repo;
-        private readonly IAuctionRepository _auctionRepo;
         private readonly IMapper _mapper;
 
-        public BidHandler(IBidRepository repository, IAuctionRepository auctionRepository, IMapper map)
+        public BidHandler(IBidRepository repository, IMapper map)
         {
             _repo = repository ?? throw new ArgumentNullException(nameof(repository));
-            _auctionRepo = auctionRepository ?? throw new ArgumentNullException(nameof(repository));
             _mapper = map;
         }
 

@@ -1,4 +1,5 @@
-﻿using CarAuction.Data.Interfaces;
+﻿using AutoMapper;
+using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using CarAuction.Logic.Models;
 using CarAuction.Logic.Queries.Auctions;
@@ -12,30 +13,33 @@ using System.Threading.Tasks;
 namespace CarAuction.Logic.Handlers
 {
     internal class AuctionQueryHandler :
-        IRequestHandler<GetAuctionByIdQuery, Auction>,
-        IRequestHandler<GetAllAuctionsQuery, List<Auction>>,
-        IRequestHandler<GetDetailsByIdQuery, AuctionModel>,
+        IRequestHandler<GetAuctionByIdQuery, AuctionModel>,
+        IRequestHandler<GetAllAuctionsQuery, IEnumerable<AuctionModel>>,
+        IRequestHandler<GetDetailsByIdQuery, AuctionWithCarsModel>,
         IRequestHandler<GetByAuctionCarIdQuery, Auction>
     {
         private readonly IAuctionRepository _repo;
+        private readonly IMapper _mapper;
 
-        public AuctionQueryHandler(IAuctionRepository repository)
+        public AuctionQueryHandler(IAuctionRepository repository, IMapper map)
         {
             _repo = repository ?? throw new ArgumentNullException(nameof(repository));
+            _mapper = map;
         }
 
-        public async Task<Auction> Handle(GetAuctionByIdQuery request, CancellationToken cancellationToken = default)
+        public async Task<AuctionModel> Handle(GetAuctionByIdQuery request, CancellationToken cancellationToken = default)
         {
             var auction =  await _repo.GetById(request.Id);
-            return auction;
+            return _mapper.Map<AuctionModel>(auction);
         }
 
-        public async Task<List<Auction>> Handle(GetAllAuctionsQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<AuctionModel>> Handle(GetAllAuctionsQuery request, CancellationToken cancellationToken = default)
         {
-            return await _repo.GetAll();
+            var auctions = await _repo.GetAll();
+            return _mapper.Map<IEnumerable<AuctionModel>>(auctions);
         }
 
-        public async Task<AuctionModel> Handle(GetDetailsByIdQuery request, CancellationToken cancellationToken = default)
+        public async Task<AuctionWithCarsModel> Handle(GetDetailsByIdQuery request, CancellationToken cancellationToken = default)
         {
             var auction = await _repo.GetByIdWithCarsAndBids(request.Id);
             if (auction == null)
@@ -43,7 +47,7 @@ namespace CarAuction.Logic.Handlers
                 return null;
             }
 
-            return new AuctionModel
+            return new AuctionWithCarsModel
             {
                 Id = auction.Id,
                 Name = auction.Name,
@@ -64,13 +68,13 @@ namespace CarAuction.Logic.Handlers
                     ElectricsFailures = ac.Car.ElectricsFailures,
                     MSRPrice = ac.Car.MSRPrice,
                     Grade = ac.Car.Grade,
-                    Bids = ac.Car.Bids.Select(b => new Bid
+                    Bids = ac.Bids.Select(b => new Bid
                     { 
                         Id = b.Id,
                         Amount = b.Amount,
                         Time = b.Time,
                         WinResult = b.WinResult
-                    }).ToList() //Where(b => b.AuctionCarId == ac.Id).ToList()
+                    }).ToList() 
                 }).ToList()
             };           
         }

@@ -28,7 +28,7 @@ namespace CarAuction.Web
             .InstancePerDependency();
 
             builder.RegisterType<AuthHandler>().As<IAuthHandler>();
-            
+
             builder.RegisterMediatR(typeof(AddAuctionCommand).Assembly);
         }
     }

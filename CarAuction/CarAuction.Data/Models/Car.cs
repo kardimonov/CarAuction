@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CarAuction.Data.Models
 {
@@ -20,6 +19,6 @@ namespace CarAuction.Data.Models
         public int Grade { get; set; }
         public int MSRPrice { get; set; }
         public List<AuctionCar> Assignments { get; set; }
-        public List<Bid> Bids { get; set; }
+        public List<Bid> Bids { get; set; }   // for AuctionWithCarsModel
     }
 }

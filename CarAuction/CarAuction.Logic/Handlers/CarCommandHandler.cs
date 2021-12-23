@@ -56,28 +56,23 @@ namespace CarAuction.Logic.Handlers
             var carToAssign = await _repo.GetDetailsById(request.CarId);
             if (carToAssign == null)
             {
-                return new ResponseModel
-                {
-                    Result = false,
-                    Message = $"Car with id: {request.CarId} is not found"
-                };
+                return new ResponseModel { Result = false, Message = $"Car with id: {request.CarId} is not found" };
             }
             if (carToAssign.Assignments.Any(i => i.AuctionId == request.AuctionId))
             {
-                return new ResponseModel
-                {
-                    Result = false,
-                    Message = "This car has already been assigned to this auction"
-                };
+                return new ResponseModel { Result = false, Message = "This car has already been assigned to this auction" };
             }
 
-            carToAssign.Assignments.Add(new AuctionCar { AuctionId = request.AuctionId, CarId = request.CarId });
+            carToAssign.Assignments.Add(new AuctionCar 
+            { 
+                AuctionId = request.AuctionId, 
+                CarId = request.CarId,
+                AuctionPrice = request.AuctionPrice
+            });
+
             await _repo.Update(carToAssign);
-            return new ResponseModel
-            {
-                Result = true,
-                Message = "This car was successfully assigned to this auction"
-            };
+
+            return new ResponseModel { Result = true, Message = "This car was successfully assigned to this auction" };
         }
     }
 }

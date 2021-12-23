@@ -19,7 +19,7 @@ namespace CarAuction.Data.Repositories
 
         public async Task<Auction> GetById(int id)
         {
-            return await _db.Auctions.FindAsync(id);
+            return await _db.Auctions.AsNoTracking().FirstOrDefaultAsync(i => i.Id == id);
         }
 
         public async Task<List<Auction>> GetAll()
@@ -32,7 +32,8 @@ namespace CarAuction.Data.Repositories
             return await _db.Auctions
                 .Include(a => a.Assignments)
                 .ThenInclude(ac => ac.Car)
-                .ThenInclude(c => c.Bids)
+                .Include(a => a.Assignments)
+                .ThenInclude(ac => ac.Bids)
                 .FirstOrDefaultAsync(a => a.Id == id);
         }
 
@@ -45,7 +46,8 @@ namespace CarAuction.Data.Repositories
 
         public async Task Update(Auction auction)
         {
-            _db.Auctions.Update(auction);
+            _db.Attach(auction);
+            _db.Entry(auction).State = EntityState.Modified;
             await _db.SaveChangesAsync();
         }
 

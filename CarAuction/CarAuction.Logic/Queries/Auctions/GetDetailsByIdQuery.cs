@@ -3,7 +3,7 @@ using MediatR;
 
 namespace CarAuction.Logic.Queries.Auctions
 {
-    public class GetDetailsByIdQuery : IRequest<AuctionModel>
+    public class GetDetailsByIdQuery : IRequest<AuctionWithCarsModel>
     {
         public int Id { get; set; }
     }

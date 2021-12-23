@@ -19,5 +19,11 @@ namespace CarAuction.Data.Repositories
             _db.Bids.Add(bid);
             await _db.SaveChangesAsync();
         }
+
+        public async Task Update(Bid bid)
+        {
+            _db.Bids.Update(bid);
+            await _db.SaveChangesAsync();
+        }
     }
 }

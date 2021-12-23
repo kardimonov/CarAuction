@@ -1,10 +1,10 @@
-﻿using CarAuction.Data.Models;
+﻿using CarAuction.Logic.Models;
 using MediatR;
 using System.Collections.Generic;
 
 namespace CarAuction.Logic.Queries.Auctions
 {
-    public class GetAllAuctionsQuery : IRequest<List<Auction>>
+    public class GetAllAuctionsQuery : IRequest<IEnumerable<AuctionModel>>
     {
     }
 }
