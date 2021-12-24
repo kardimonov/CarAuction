@@ -26,8 +26,8 @@ namespace CarAuction.Data.Repositories
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
         }
-
-        public bool ExistsLogin(string name)
+        
+        public bool CheckIfLoginExists(string name)
         {
             return _db.Users.Any(u => u.UserName == name);
         }

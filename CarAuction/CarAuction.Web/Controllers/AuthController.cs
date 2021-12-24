@@ -59,8 +59,12 @@ namespace CarAuction.Web.Controllers
             {
                 return BadRequest("Request is not correct");
             }
+            if(_service.CheckIfLoginExists(model.UserName))
+            {
+                return BadRequest("A user with the same Login already exists in the system. Choose another login.");
+            }
 
-            await _service.AddCustomer(model);
+            await _service.RegisterUser(model);
             return Ok(new { Result = true });
         }
     }

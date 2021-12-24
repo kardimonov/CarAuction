@@ -15,8 +15,7 @@ namespace CarAuction.Logic.Handlers
     internal class AuctionQueryHandler :
         IRequestHandler<GetAuctionByIdQuery, AuctionModel>,
         IRequestHandler<GetAllAuctionsQuery, IEnumerable<AuctionModel>>,
-        IRequestHandler<GetDetailsByIdQuery, AuctionWithCarsModel>,
-        IRequestHandler<GetByAuctionCarIdQuery, Auction>
+        IRequestHandler<GetDetailsByIdQuery, AuctionWithCarsModel>
     {
         private readonly IAuctionRepository _repo;
         private readonly IMapper _mapper;
@@ -77,11 +76,6 @@ namespace CarAuction.Logic.Handlers
                     }).ToList() 
                 }).ToList()
             };           
-        }
-
-        public async Task<Auction> Handle(GetByAuctionCarIdQuery request, CancellationToken cancellationToken = default)
-        {
-            return await _repo.GetByAuctionCarId(request.AuctionCarId);
         }
     }
 }
