@@ -4,6 +4,7 @@ using CarAuction.Logic.Commands.Auction;
 using CarAuction.Logic.Interfaces;
 using CarAuction.Logic.Services.AuthInfrastructure;
 using MediatR.Extensions.Autofac.DependencyInjection;
+using Quartz.Impl;
 using System.Linq;
 
 namespace CarAuction.Web
@@ -30,6 +31,9 @@ namespace CarAuction.Web
             builder.RegisterType<AuthHandler>().As<IAuthHandler>();
 
             builder.RegisterMediatR(typeof(AddAuctionCommand).Assembly);
+
+            var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
+            builder.RegisterInstance(scheduler).SingleInstance();
         }
     }
 }

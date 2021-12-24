@@ -69,7 +69,7 @@ namespace CarAuction.Logic.Services
             };
         }
 
-        public async Task AddCustomer(UserModel model)
+        public async Task AddCustomer(UserRegisterModel model)
         {
             var password = _hashService.EncryptPassword(model.Password);
             await _repo.AddCustomer(new User()

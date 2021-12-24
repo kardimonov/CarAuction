@@ -53,7 +53,7 @@ namespace CarAuction.Web.Controllers
         /// <returns></returns>
         // POST: api/Auth/Register
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserModel model)
+        public async Task<IActionResult> Register([FromBody] UserRegisterModel model)
         {
             if (!ModelState.IsValid)
             {
