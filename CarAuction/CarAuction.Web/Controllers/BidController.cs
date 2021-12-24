@@ -1,10 +1,7 @@
-﻿using CarAuction.Data.Enums;
-using CarAuction.Logic.Commands;
-using CarAuction.Logic.Queries.Auctions;
+﻿using CarAuction.Logic.Commands;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Quartz;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,12 +17,10 @@ namespace CarAuction.Web.Controllers
     public class BidController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ISchedulerFactory _factory;
 
-        public BidController(IMediator mediator, ISchedulerFactory factory)
+        public BidController(IMediator mediator)
         {
             _mediator = mediator;
-            _factory = factory;
         }
 
         /// <summary>
@@ -43,17 +38,15 @@ namespace CarAuction.Web.Controllers
                 return BadRequest("Request is not correct");
             }
 
-            var auction = await _mediator.Send(new GetByAuctionCarIdQuery() { AuctionCarId = model.AuctionCarId });
-            if (auction.Status != AuctionStatus.Started)
-            {
-                return BadRequest("The bids are accepted only while the auction is open");
-            }
-
             model.UserId ??= User.Claims.FirstOrDefault(x => x.Type == "user_id")?.Value;
             
-            await _mediator.Send(model);
+            var response = await _mediator.Send(model);
+            if (!response.Result)
+            {
+                return BadRequest($"{response.Message}");
+            }
 
-            return Ok(new { Result = true });
+            return Ok(new { Result = response.Result, Message = response.Message });
         }
     }
 }

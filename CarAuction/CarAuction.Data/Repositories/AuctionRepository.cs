@@ -3,7 +3,6 @@ using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarAuction.Data.Repositories
@@ -55,13 +54,6 @@ namespace CarAuction.Data.Repositories
         {
             _db.Auctions.Remove(await _db.Auctions.FindAsync(id));
             await _db.SaveChangesAsync();
-        }
-
-        public async Task<Auction> GetByAuctionCarId(int auctionCarId)
-        {
-            return await _db.Auctions
-                .Where(a => a.Assignments.Any(ac => ac.Id == auctionCarId))
-                .FirstOrDefaultAsync();
         }
     }
 }

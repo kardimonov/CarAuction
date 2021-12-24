@@ -53,14 +53,18 @@ namespace CarAuction.Web.Controllers
         /// <returns></returns>
         // POST: api/Auth/Register
         [HttpPost]
-        public async Task<IActionResult> Register([FromBody] UserModel model)
+        public async Task<IActionResult> Register([FromBody] UserRegisterModel model)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Request is not correct");
             }
+            if(_service.CheckIfLoginExists(model.UserName))
+            {
+                return BadRequest("A user with the same Login already exists in the system. Choose another login.");
+            }
 
-            await _service.AddCustomer(model);
+            await _service.RegisterUser(model);
             return Ok(new { Result = true });
         }
     }

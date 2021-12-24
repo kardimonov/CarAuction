@@ -7,5 +7,6 @@ namespace CarAuction.Data.Interfaces
     {
         Task<User> GetByName(string userName);
         Task AddCustomer(User user);
+        bool CheckIfLoginExists(string name);
     }
 }

@@ -17,7 +17,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json;
 using Quartz;
-using Quartz.Impl;
 using System.Linq;
 using System.Text;
 
@@ -51,9 +50,6 @@ namespace CarAuction
             {
                 q.WaitForJobsToComplete = true;
             });
-
-            var scheduler = StdSchedulerFactory.GetDefaultScheduler().GetAwaiter().GetResult();
-            services.AddSingleton(scheduler);
 
             var connection = Configuration.GetConnectionString("DefaultConnection");            
             services.AddDbContext<ApplicationContext>(options => options.UseSqlServer(connection));

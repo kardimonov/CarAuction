@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using CarAuction.Logic.Models;
+using MediatR;
 
 namespace CarAuction.Logic.Commands
 {
-    public class AddBidCommand : IRequest<bool>
+    public class AddBidCommand : IRequest<ResponseModel>
     {
         public int Amount { get; set; }
         public int AuctionCarId { get; set; }

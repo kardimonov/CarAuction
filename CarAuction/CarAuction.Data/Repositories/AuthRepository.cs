@@ -2,6 +2,7 @@
 using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarAuction.Data.Repositories
@@ -24,6 +25,11 @@ namespace CarAuction.Data.Repositories
         {
             _db.Users.Add(user);
             await _db.SaveChangesAsync();
+        }
+        
+        public bool CheckIfLoginExists(string name)
+        {
+            return _db.Users.Any(u => u.UserName == name);
         }
     }
 }
