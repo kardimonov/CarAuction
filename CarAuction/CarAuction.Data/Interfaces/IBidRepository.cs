@@ -7,5 +7,6 @@ namespace CarAuction.Data.Interfaces
     {
         Task Create(Bid bid);
         Task Update(Bid bid);
+        int GetMaxBid(int auctionCarId);
     }
 }
