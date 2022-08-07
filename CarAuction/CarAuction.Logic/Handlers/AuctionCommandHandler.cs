@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using CarAuction.Data.Enums;
 using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
 using CarAuction.Logic.Commands.Auction;
@@ -41,20 +40,7 @@ namespace CarAuction.Logic.Handlers
 
         public async Task<ResponseModel> Handle(UpdateAuctionCommand request, CancellationToken cancellationToken = default)
         {
-            var auctionToUpdate = await _repo.GetById(request.Id);
-            if (auctionToUpdate == null)
-            {
-                return null;
-            }
-            if (auctionToUpdate.Status != AuctionStatus.Planned)
-            {
-                return new ResponseModel 
-                { 
-                    Result = false, 
-                    Message = $"You cannot update the auction, which has started or completed" 
-                };
-            }
-
+            var auctionToUpdate = await _repo.GetById(request.Id);            
             var auction = _mapper.Map<Auction>(request);
 
             await _repo.Update(auction);

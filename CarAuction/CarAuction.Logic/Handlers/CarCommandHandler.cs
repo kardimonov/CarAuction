@@ -6,7 +6,6 @@ using CarAuction.Logic.Interfaces;
 using CarAuction.Logic.Models;
 using MediatR;
 using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -54,16 +53,8 @@ namespace CarAuction.Logic.Handlers
         public async Task<ResponseModel> Handle(AssignToAuctionCommand request, CancellationToken cancellationToken = default)
         {
             var carToAssign = await _repo.GetDetailsById(request.CarId);
-            if (carToAssign == null)
-            {
-                return new ResponseModel { Result = false, Message = $"Car with id: {request.CarId} is not found" };
-            }
-            if (carToAssign.Assignments.Any(i => i.AuctionId == request.AuctionId))
-            {
-                return new ResponseModel { Result = false, Message = "This car has already been assigned to this auction" };
-            }
-
-            carToAssign.Assignments.Add(new AuctionCar 
+            
+            carToAssign.Assignments.Add(new AuctionCar
             { 
                 AuctionId = request.AuctionId, 
                 CarId = request.CarId,

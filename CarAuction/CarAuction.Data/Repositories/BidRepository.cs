@@ -1,6 +1,7 @@
 ﻿using CarAuction.Data.Context;
 using CarAuction.Data.Interfaces;
 using CarAuction.Data.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CarAuction.Data.Repositories
@@ -24,6 +25,13 @@ namespace CarAuction.Data.Repositories
         {
             _db.Bids.Update(bid);
             await _db.SaveChangesAsync();
+        }
+
+        public int GetMaxBid(int auctionCarId)
+        {
+            return _db.Bids
+                .Where(b => b.AuctionCarId == auctionCarId)
+                .Max(b => b.Amount);
         }
     }
 }
